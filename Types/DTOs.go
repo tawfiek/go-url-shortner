@@ -1,5 +1,5 @@
 package types
 
 type NewURL struct {
-	LongUrl string `json:URL`
+	LongUrl string `json:"URL"`
 }

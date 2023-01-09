@@ -7,7 +7,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"os"
-	controllers "url-shortnner/controllers"
+	"url-shortnner/controllers"
 )
 
 func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
@@ -36,6 +36,8 @@ func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
 	urlRouterGroup := v1Group.Group("/url")
 
 	setupURLRouters(urlRouterGroup, server)
+
+	router.GET("/:uid", server.GetUrlByUniqueID)
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{

@@ -17,6 +17,7 @@ type Env struct {
 	DBPort     string `mapstructure:"DB_PORT"`
 	DBName     string `mapstructure:"DB_NAME"`
 	Port       string `mapstructure:"PORT"`
+	DefaultTTL int8   `mapstructure:"DEFAULT_TTL_DAYS"`
 }
 
 func LoadConfig() (config Env, err error) {
