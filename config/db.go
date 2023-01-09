@@ -4,9 +4,8 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
+	"url-shortnner/models"
 )
-
-var dbConnection *gorm.DB
 
 func InitDB(env Env) *gorm.DB {
 
@@ -14,9 +13,17 @@ func InitDB(env Env) *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
+	Migrate(db)
+
 	checkError(err)
 
 	return db
+}
+
+func Migrate(db *gorm.DB) {
+	err := db.AutoMigrate(&models.URL{})
+
+	checkError(err)
 }
 
 func checkError(e error) {

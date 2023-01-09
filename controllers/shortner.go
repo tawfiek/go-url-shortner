@@ -1,37 +1,63 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"log"
+	"gorm.io/gorm"
 	"net/http"
+	"time"
 	types "url-shortnner/Types"
+	"url-shortnner/config"
+	"url-shortnner/models"
+	"url-shortnner/utils"
 )
 
-func (*IServer) AddNewURL(context *gin.Context) {
-	var body types.NewURL
-
-	if err := context.ShouldBindBodyWith(&body, binding.JSON); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "invalid URL",
-		})
-
-		log.Fatalln(err.Error())
-	}
-
-	// TODO: add the all the logic needed.
+type IServer struct {
+	Env config.Env
+	DB  *gorm.DB
 }
 
-func (*IServer) GetUrlByID(context *gin.Context) {
+func (server *IServer) AddNewURL(context *gin.Context) {
 	var body types.NewURL
 
-	if err := context.ShouldBindBodyWith(&body, binding.JSON); err != nil {
+	err := context.ShouldBindJSON(&body)
+
+	if err != nil {
 		context.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "invalid URL",
 		})
 
-		log.Fatalln(err.Error())
+		return
 	}
 
-	// TODO: add the all the logic needed.
+	fmt.Printf("Bounded Body: %v \n", body)
+
+	encoding := utils.EncodeURL([]byte(body.LongUrl))
+	uid := utils.RandomStringFromEncoding(10, []rune(encoding))
+
+	durationToAdd := int64(server.Env.DefaultTTL) * int64(time.Hour) * 24
+	ttl := time.Now().Add(time.Duration(durationToAdd))
+
+	newURL := models.URL{
+		OriginalURL: body.LongUrl,
+		AddedAt:     time.Now(),
+		UID:         uid,
+		TTL:         ttl,
+	}
+
+	server.DB.Create(&newURL)
+
+	context.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"uid":     uid,
+		"longURL": body.LongUrl,
+	})
+}
+
+func (server *IServer) GetUrlByUniqueID(context *gin.Context) {
+	var url models.URL
+	uid := context.Param("uid")
+
+	server.DB.First(&url, "uid=?", uid)
+	context.Redirect(http.StatusPermanentRedirect, url.OriginalURL)
 }

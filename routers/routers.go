@@ -7,7 +7,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"os"
-	controllers "url-shortnner/controllers"
+	"url-shortnner/controllers"
 )
 
 func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
@@ -22,14 +22,29 @@ func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
 
 	router.GET("/swagger/api-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
+	router.Static("/site", "./public")
+	//router.StaticFile("/images/MicrosoftTeams-image.png", "./public/images/MicrosoftTeams-image.png")
+
+	//router.GET("/site/*filepath", func(c *gin.Context) {
+	//	filepathToServe := filepath.Join("public")
+	//
+	//	ext := filepath.Ext(filepathToServe)
+	//
+	//	if ext == ".jpg" || ext == ".jpeg" {
+	//		c.Header("Content-Type", "image/jpeg")
+	//	} else if ext == ".png" {
+	//		c.Header("Content-Type", "image/png")
+	//	} else if ext == ".gif" {
+	//		c.Header("Content-Type", "image/gif")
+	//	}
+	//	c.File(filepathToServe)
+	//})
+
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
-
-	router.LoadHTMLGlob("views/*")
-
 	v1Group := router.Group("/api/v1")
 
 	// Application Controllers Groups
@@ -37,11 +52,13 @@ func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
 
 	setupURLRouters(urlRouterGroup, server)
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Nour and Tawfiek  Shortener ",
-		})
-	})
+	router.GET("/:uid", server.GetUrlByUniqueID)
+	//
+	//router.GET("/", func(c *gin.Context) {
+	//	c.HTML(http.StatusOK, "index.html", gin.H{
+	//		"title": "Nour and Tawfiek  Shortener ",
+	//	})
+	//})
 
 	return router
 }
