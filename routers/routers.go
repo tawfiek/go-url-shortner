@@ -7,7 +7,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"os"
-	"url-shortnner/controllers"
+	controllers "url-shortnner/controllers"
 )
 
 func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
