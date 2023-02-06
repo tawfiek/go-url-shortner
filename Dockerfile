@@ -22,5 +22,6 @@ COPY .env .
 
 ENV GIN_MODE=release
 
-EXPOSE 3000main-linux-386
+EXPOSE 3000
+
 CMD ["/usr/app/main-linux-386"]
