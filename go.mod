@@ -3,6 +3,7 @@ module url-shortnner
 go 1.18
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/GeertJohan/go.rice v1.0.3 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.2.0 // indirect

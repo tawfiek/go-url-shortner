@@ -1,0 +1,25 @@
+ .u-section-1 {
+  background-image: linear-gradient(0deg, rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url("images/418c2889efde5c49b8a1a5a4f6a5d768ce3cb47260a21ab1b511a0f32f95b83b7df6490c941a46dbe7289dad8cf64e0079fd10ec9c0eab94679ddc_1280.jpg");
+  background-position: 50% 50%;
+}
+
+.u-section-1 .u-sheet-1 {
+  min-height: 50vw;
+}
+
+.u-section-1 .u-text-1 {
+  margin: 220px auto 0;
+}
+
+.u-section-1 .u-text-2 {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+}
+
+.u-section-1 .u-btn-1 {
+  background-image: none;
+  border-style: solid;
+  margin: 30px auto 60px;
+  padding: 0;
+}

@@ -22,4 +22,7 @@
 go.work
 
 # Environment varibles file
-.env
+.env*
+
+
+bin/

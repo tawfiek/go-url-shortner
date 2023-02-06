@@ -23,22 +23,6 @@ func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
 	router.GET("/swagger/api-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	router.Static("/site", "./public")
-	//router.StaticFile("/images/MicrosoftTeams-image.png", "./public/images/MicrosoftTeams-image.png")
-
-	//router.GET("/site/*filepath", func(c *gin.Context) {
-	//	filepathToServe := filepath.Join("public")
-	//
-	//	ext := filepath.Ext(filepathToServe)
-	//
-	//	if ext == ".jpg" || ext == ".jpeg" {
-	//		c.Header("Content-Type", "image/jpeg")
-	//	} else if ext == ".png" {
-	//		c.Header("Content-Type", "image/png")
-	//	} else if ext == ".gif" {
-	//		c.Header("Content-Type", "image/gif")
-	//	}
-	//	c.File(filepathToServe)
-	//})
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -53,12 +37,6 @@ func SetupApplicationRouters(server *controllers.IServer) *gin.Engine {
 	setupURLRouters(urlRouterGroup, server)
 
 	router.GET("/:uid", server.GetUrlByUniqueID)
-	//
-	//router.GET("/", func(c *gin.Context) {
-	//	c.HTML(http.StatusOK, "index.html", gin.H{
-	//		"title": "Nour and Tawfiek  Shortener ",
-	//	})
-	//})
 
 	return router
 }
