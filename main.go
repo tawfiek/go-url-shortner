@@ -1,52 +1,31 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"net/http"
-	"os"
+	"url-shortnner/config"
+	"url-shortnner/controllers"
 	"url-shortnner/routers"
 )
 
-func getPort() string {
-	port := os.Getenv("PORT")
-	if len(port) == 0 {
-		port = "8080"
+func loadEnv() config.Env {
+	env, err := config.LoadConfig()
+
+	if err != nil {
+		log.Fatal("Error loading .env file", err)
 	}
 
-	return ":" + port
+	return env
 }
 
 func main() {
-	router := gin.Default()
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetOutput(os.Stdout)
+	env := loadEnv()
+	dbConnection := config.InitDB(env)
+	controllers := new(controllers.IServer)
 
-	url := ginSwagger.URL("/docs/swagger.yaml") // The url pointing to API definition
+	controllers.DB = dbConnection
+	controllers.Env = env
 
-	router.Use(gin.Logger())
+	engin := routers.SetupApplicationRouters(controllers)
 
-	router.GET("/swagger/api-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
-
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-
-	router.LoadHTMLGlob("views/*")
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Nour and Tawfiek  Shortener ",
-		})
-	})
-
-	v1Group := router.Group("/api/v1")
-
-	routers.MainRouter(v1Group)
-
-	port := getPort()
-	router.Run(port)
+	engin.Run(":" + env.Port)
 }
