@@ -29,7 +29,7 @@ services:
       - app
 
   app:
-    image: url-shortener
+    image: tawfiek/url-shortener
     env_file:
       - .env
     depends_on:
